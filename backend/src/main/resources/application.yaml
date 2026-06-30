@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: form-builder
+  datasource:
+    url: jdbc:postgresql://localhost:5432/formbuilder
+    username: postgres
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+server:
+  port: 8081
