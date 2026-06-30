@@ -1,3 +1,5 @@
 /.idea/
 .env
+!.env.example
+!.env.e2e.example
 .DS_Store
