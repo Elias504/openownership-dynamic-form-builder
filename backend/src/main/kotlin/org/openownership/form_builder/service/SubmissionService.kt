@@ -5,6 +5,11 @@ import java.util.UUID
 
 interface SubmissionService {
     fun findByForm(formId: UUID): List<SubmissionDto>
+
     fun findById(id: UUID): SubmissionDto
-    fun save(formId: UUID, dto: SubmissionDto): SubmissionDto
+
+    fun save(
+        formId: UUID,
+        dto: SubmissionDto,
+    ): SubmissionDto
 }

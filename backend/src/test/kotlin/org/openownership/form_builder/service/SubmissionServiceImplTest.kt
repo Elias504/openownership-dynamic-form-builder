@@ -18,15 +18,14 @@ import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 class SubmissionServiceImplTest {
-
     @Mock private lateinit var repository: SubmissionRepository
+
     @InjectMocks private lateinit var service: SubmissionServiceImpl
 
     private val formId: UUID = UUID.randomUUID()
     private val sampleData = mapOf("field-1" to "Alice", "field-2" to "42")
 
-    private fun submission(data: Map<String, Any> = sampleData) =
-        Submission(formId = formId, data = data)
+    private fun submission(data: Map<String, Any> = sampleData) = Submission(formId = formId, data = data)
 
     @Test
     fun `findByForm returns DTOs ordered by createdAt desc`() {

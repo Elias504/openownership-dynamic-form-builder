@@ -12,22 +12,29 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class WorkspaceControllerIntegrationTest : AbstractIntegrationTest() {
-
-    private fun createWorkspace(name: String = "Test WS", slug: String = "test-ws"): String {
-        val result = mockMvc.perform(post("/api/workspaces")
-            .contentType(APPLICATION_JSON)
-            .content("""{"name":"$name","slug":"$slug"}"""))
-            .andExpect(status().isCreated)
-            .andReturn()
+    private fun createWorkspace(
+        name: String = "Test WS",
+        slug: String = "test-ws",
+    ): String {
+        val result =
+            mockMvc
+                .perform(
+                    post("/api/workspaces")
+                        .contentType(APPLICATION_JSON)
+                        .content("""{"name":"$name","slug":"$slug"}"""),
+                ).andExpect(status().isCreated)
+                .andReturn()
         return objectMapper.readTree(result.response.contentAsString)["id"].asText()
     }
 
     @Test
     fun `POST returns 201 with full DTO`() {
-        mockMvc.perform(post("/api/workspaces")
-            .contentType(APPLICATION_JSON)
-            .content("""{"name":"ACME","slug":"acme"}"""))
-            .andExpect(status().isCreated)
+        mockMvc
+            .perform(
+                post("/api/workspaces")
+                    .contentType(APPLICATION_JSON)
+                    .content("""{"name":"ACME","slug":"acme"}"""),
+            ).andExpect(status().isCreated)
             .andExpect(jsonPath("$.id").isString)
             .andExpect(jsonPath("$.name").value("ACME"))
             .andExpect(jsonPath("$.slug").value("acme"))
@@ -41,10 +48,11 @@ class WorkspaceControllerIntegrationTest : AbstractIntegrationTest() {
         createWorkspace("WS One", "ws-one")
         createWorkspace("WS Two", "ws-two")
 
-        mockMvc.perform(get("/api/workspaces"))
+        mockMvc
+            .perform(get("/api/workspaces"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$", hasSize<Any>(2)))
-            .andExpect(jsonPath("$[0].name").value("WS Two"))  // ordered by createdAt desc
+            .andExpect(jsonPath("$[0].name").value("WS Two")) // ordered by createdAt desc
             .andExpect(jsonPath("$[1].name").value("WS One"))
     }
 
@@ -52,7 +60,8 @@ class WorkspaceControllerIntegrationTest : AbstractIntegrationTest() {
     fun `GET by ID returns the workspace`() {
         val id = createWorkspace("Lookup WS", "lookup-ws")
 
-        mockMvc.perform(get("/api/workspaces/$id"))
+        mockMvc
+            .perform(get("/api/workspaces/$id"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value("Lookup WS"))
@@ -63,10 +72,12 @@ class WorkspaceControllerIntegrationTest : AbstractIntegrationTest() {
     fun `PUT updates name and slug`() {
         val id = createWorkspace()
 
-        mockMvc.perform(put("/api/workspaces/$id")
-            .contentType(APPLICATION_JSON)
-            .content("""{"name":"Renamed WS","slug":"renamed-ws"}"""))
-            .andExpect(status().isOk)
+        mockMvc
+            .perform(
+                put("/api/workspaces/$id")
+                    .contentType(APPLICATION_JSON)
+                    .content("""{"name":"Renamed WS","slug":"renamed-ws"}"""),
+            ).andExpect(status().isOk)
             .andExpect(jsonPath("$.id").value(id))
             .andExpect(jsonPath("$.name").value("Renamed WS"))
             .andExpect(jsonPath("$.slug").value("renamed-ws"))
@@ -76,10 +87,12 @@ class WorkspaceControllerIntegrationTest : AbstractIntegrationTest() {
     fun `DELETE returns 204 and workspace is excluded from subsequent list`() {
         val id = createWorkspace()
 
-        mockMvc.perform(delete("/api/workspaces/$id"))
+        mockMvc
+            .perform(delete("/api/workspaces/$id"))
             .andExpect(status().isNoContent)
 
-        mockMvc.perform(get("/api/workspaces"))
+        mockMvc
+            .perform(get("/api/workspaces"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$", hasSize<Any>(0)))
     }

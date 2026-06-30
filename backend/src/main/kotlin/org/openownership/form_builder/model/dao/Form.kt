@@ -11,15 +11,11 @@ import java.util.UUID
 class Form(
     @Column(nullable = false)
     var workspaceId: UUID = UUID.randomUUID(),
-
     @Column(nullable = false)
     var title: String = "",
-
     var description: String? = null,
-
     var published: Boolean = false,
 ) : BaseEntity<FormDto>() {
-
     constructor(dto: FormDto) : this(
         workspaceId = dto.workspaceId,
         title = dto.title,
@@ -32,17 +28,18 @@ class Form(
         deletedBy = dto.deletedBy
     }
 
-    override fun toDto() = FormDto().also {
-        it.id = id
-        it.workspaceId = workspaceId
-        it.title = title
-        it.description = description
-        it.published = published
-        it.createdAt = createdAt
-        it.createdBy = createdBy
-        it.updatedAt = updatedAt
-        it.updatedBy = updatedBy
-        it.deletedAt = deletedAt
-        it.deletedBy = deletedBy
-    }
+    override fun toDto() =
+        FormDto().also {
+            it.id = id
+            it.workspaceId = workspaceId
+            it.title = title
+            it.description = description
+            it.published = published
+            it.createdAt = createdAt
+            it.createdBy = createdBy
+            it.updatedAt = updatedAt
+            it.updatedBy = updatedBy
+            it.deletedAt = deletedAt
+            it.deletedBy = deletedBy
+        }
 }

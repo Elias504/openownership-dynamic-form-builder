@@ -9,8 +9,9 @@ import java.util.UUID
 
 @Service
 @Transactional
-class SubmissionServiceImpl(private val repository: SubmissionRepository) : SubmissionService {
-
+class SubmissionServiceImpl(
+    private val repository: SubmissionRepository,
+) : SubmissionService {
     @Transactional(readOnly = true)
     override fun findByForm(formId: UUID): List<SubmissionDto> =
         repository.findAllByFormIdAndDeletedAtIsNullOrderByCreatedAtDesc(formId).map { it.toDto() }
@@ -20,7 +21,10 @@ class SubmissionServiceImpl(private val repository: SubmissionRepository) : Subm
         repository.findByIdAndDeletedAtIsNull(id)?.toDto()
             ?: throw NoSuchElementException("Submission $id not found")
 
-    override fun save(formId: UUID, dto: SubmissionDto): SubmissionDto {
+    override fun save(
+        formId: UUID,
+        dto: SubmissionDto,
+    ): SubmissionDto {
         val submission = Submission(dto)
         submission.formId = formId
         return repository.save(submission).toDto()

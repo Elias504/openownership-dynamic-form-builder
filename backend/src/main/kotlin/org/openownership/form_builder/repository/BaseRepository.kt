@@ -8,5 +8,6 @@ import java.util.UUID
 @NoRepositoryBean
 interface BaseRepository<E : BaseEntity<*>> : JpaRepository<E, UUID> {
     fun findAllByDeletedAtIsNull(): List<E>
+
     fun findByIdAndDeletedAtIsNull(id: UUID): E?
 }

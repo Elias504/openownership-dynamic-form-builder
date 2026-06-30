@@ -12,15 +12,23 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-class SubmissionController(private val service: SubmissionService) {
-
+class SubmissionController(
+    private val service: SubmissionService,
+) {
     @GetMapping("/api/forms/{formId}/submissions")
-    fun findByForm(@PathVariable formId: UUID) = service.findByForm(formId)
+    fun findByForm(
+        @PathVariable formId: UUID,
+    ) = service.findByForm(formId)
 
     @GetMapping("/api/submissions/{id}")
-    fun findById(@PathVariable id: UUID) = service.findById(id)
+    fun findById(
+        @PathVariable id: UUID,
+    ) = service.findById(id)
 
     @PostMapping("/api/forms/{formId}/submissions")
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@PathVariable formId: UUID, @RequestBody dto: SubmissionDto) = service.save(formId, dto)
+    fun save(
+        @PathVariable formId: UUID,
+        @RequestBody dto: SubmissionDto,
+    ) = service.save(formId, dto)
 }

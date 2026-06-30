@@ -16,22 +16,32 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/workspaces")
-class WorkspaceController(private val service: WorkspaceService) {
-
+class WorkspaceController(
+    private val service: WorkspaceService,
+) {
     @GetMapping
     fun findAll() = service.findAll()
 
     @GetMapping("/{id}")
-    fun findById(@PathVariable id: UUID) = service.findById(id)
+    fun findById(
+        @PathVariable id: UUID,
+    ) = service.findById(id)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@RequestBody dto: WorkspaceDto) = service.save(dto)
+    fun save(
+        @RequestBody dto: WorkspaceDto,
+    ) = service.save(dto)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: UUID, @RequestBody dto: WorkspaceDto) = service.update(id, dto)
+    fun update(
+        @PathVariable id: UUID,
+        @RequestBody dto: WorkspaceDto,
+    ) = service.update(id, dto)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable id: UUID) = service.delete(id)
+    fun delete(
+        @PathVariable id: UUID,
+    ) = service.delete(id)
 }

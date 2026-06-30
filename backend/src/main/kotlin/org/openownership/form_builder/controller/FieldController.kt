@@ -14,22 +14,35 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-class FieldController(private val service: FieldService) {
-
+class FieldController(
+    private val service: FieldService,
+) {
     @GetMapping("/api/forms/{formId}/fields")
-    fun findByForm(@PathVariable formId: UUID) = service.findByForm(formId)
+    fun findByForm(
+        @PathVariable formId: UUID,
+    ) = service.findByForm(formId)
 
     @GetMapping("/api/fields/{id}")
-    fun findById(@PathVariable id: UUID) = service.findById(id)
+    fun findById(
+        @PathVariable id: UUID,
+    ) = service.findById(id)
 
     @PostMapping("/api/forms/{formId}/fields")
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@PathVariable formId: UUID, @RequestBody dto: FieldDto) = service.save(formId, dto)
+    fun save(
+        @PathVariable formId: UUID,
+        @RequestBody dto: FieldDto,
+    ) = service.save(formId, dto)
 
     @PutMapping("/api/fields/{id}")
-    fun update(@PathVariable id: UUID, @RequestBody dto: FieldDto) = service.update(id, dto)
+    fun update(
+        @PathVariable id: UUID,
+        @RequestBody dto: FieldDto,
+    ) = service.update(id, dto)
 
     @DeleteMapping("/api/fields/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable id: UUID) = service.delete(id)
+    fun delete(
+        @PathVariable id: UUID,
+    ) = service.delete(id)
 }

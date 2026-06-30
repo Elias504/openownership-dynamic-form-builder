@@ -12,7 +12,6 @@ import java.util.UUID
 
 @MappedSuperclass
 abstract class BaseEntity<out T : BaseDto> : Serializable {
-
     @Id
     open var id: UUID = UUID.randomUUID()
 

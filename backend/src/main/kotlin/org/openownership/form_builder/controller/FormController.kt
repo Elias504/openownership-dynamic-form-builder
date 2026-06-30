@@ -14,22 +14,35 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-class FormController(private val service: FormService) {
-
+class FormController(
+    private val service: FormService,
+) {
     @GetMapping("/api/workspaces/{workspaceId}/forms")
-    fun findByWorkspace(@PathVariable workspaceId: UUID) = service.findByWorkspace(workspaceId)
+    fun findByWorkspace(
+        @PathVariable workspaceId: UUID,
+    ) = service.findByWorkspace(workspaceId)
 
     @GetMapping("/api/forms/{id}")
-    fun findById(@PathVariable id: UUID) = service.findById(id)
+    fun findById(
+        @PathVariable id: UUID,
+    ) = service.findById(id)
 
     @PostMapping("/api/workspaces/{workspaceId}/forms")
     @ResponseStatus(HttpStatus.CREATED)
-    fun save(@PathVariable workspaceId: UUID, @RequestBody dto: FormDto) = service.save(workspaceId, dto)
+    fun save(
+        @PathVariable workspaceId: UUID,
+        @RequestBody dto: FormDto,
+    ) = service.save(workspaceId, dto)
 
     @PutMapping("/api/forms/{id}")
-    fun update(@PathVariable id: UUID, @RequestBody dto: FormDto) = service.update(id, dto)
+    fun update(
+        @PathVariable id: UUID,
+        @RequestBody dto: FormDto,
+    ) = service.update(id, dto)
 
     @DeleteMapping("/api/forms/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun delete(@PathVariable id: UUID) = service.delete(id)
+    fun delete(
+        @PathVariable id: UUID,
+    ) = service.delete(id)
 }

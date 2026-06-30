@@ -14,7 +14,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-
     // Ordered.HIGHEST_PRECEDENCE + 1 ensures this chain runs before the OAuth2
     // Authorization Server's autoconfigured chain (which sits at HIGHEST_PRECEDENCE
     // and has CSRF enabled), so our permitAll / CSRF-disabled config wins for all requests.
@@ -30,12 +29,13 @@ class SecurityConfig {
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val config = CorsConfiguration().apply {
-            allowedOrigins = listOf("http://localhost:5173", "http://localhost:3000")
-            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-            allowedHeaders = listOf("*")
-            maxAge = 3600L
-        }
+        val config =
+            CorsConfiguration().apply {
+                allowedOrigins = listOf("http://localhost:5173", "http://localhost:3000")
+                allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                allowedHeaders = listOf("*")
+                maxAge = 3600L
+            }
         return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/api/**", config)
         }

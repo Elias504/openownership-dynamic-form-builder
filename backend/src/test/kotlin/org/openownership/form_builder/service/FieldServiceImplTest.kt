@@ -19,14 +19,17 @@ import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 class FieldServiceImplTest {
-
     @Mock private lateinit var repository: FieldRepository
+
     @InjectMocks private lateinit var service: FieldServiceImpl
 
     private val formId: UUID = UUID.randomUUID()
 
-    private fun field(label: String = "Name", type: FieldType = FieldType.TEXT, order: Int = 0) =
-        Field(formId = formId, label = label, type = type, displayOrder = order)
+    private fun field(
+        label: String = "Name",
+        type: FieldType = FieldType.TEXT,
+        order: Int = 0,
+    ) = Field(formId = formId, label = label, type = type, displayOrder = order)
 
     @Test
     fun `findByForm returns DTOs ordered by displayOrder`() {
@@ -65,7 +68,12 @@ class FieldServiceImplTest {
 
     @Test
     fun `save sets formId from path parameter and persists`() {
-        val dto = FieldDto().apply { label = "Email"; type = FieldType.TEXT; required = true }
+        val dto =
+            FieldDto().apply {
+                label = "Email"
+                type = FieldType.TEXT
+                required = true
+            }
         val saved = field("Email")
         whenever(repository.save(any<Field>())).thenReturn(saved)
 
@@ -82,13 +90,14 @@ class FieldServiceImplTest {
         val existing = field()
         whenever(repository.findByIdAndDeletedAtIsNull(existing.id)).thenReturn(existing)
         whenever(repository.save(any<Field>())).thenAnswer { it.arguments[0] as Field }
-        val dto = FieldDto().apply {
-            label = "Updated Label"
-            type = FieldType.NUMBER
-            required = true
-            displayOrder = 5
-            config = mapOf("min" to 0, "max" to 100)
-        }
+        val dto =
+            FieldDto().apply {
+                label = "Updated Label"
+                type = FieldType.NUMBER
+                required = true
+                displayOrder = 5
+                config = mapOf("min" to 0, "max" to 100)
+            }
 
         val result = service.update(existing.id, dto)
 

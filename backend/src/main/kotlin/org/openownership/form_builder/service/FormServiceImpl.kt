@@ -10,8 +10,9 @@ import java.util.UUID
 
 @Service
 @Transactional
-class FormServiceImpl(private val repository: FormRepository) : FormService {
-
+class FormServiceImpl(
+    private val repository: FormRepository,
+) : FormService {
     @Transactional(readOnly = true)
     override fun findByWorkspace(workspaceId: UUID): List<FormDto> =
         repository.findAllByWorkspaceIdAndDeletedAtIsNull(workspaceId).map { it.toDto() }
@@ -21,15 +22,22 @@ class FormServiceImpl(private val repository: FormRepository) : FormService {
         repository.findByIdAndDeletedAtIsNull(id)?.toDto()
             ?: throw NoSuchElementException("Form $id not found")
 
-    override fun save(workspaceId: UUID, dto: FormDto): FormDto {
+    override fun save(
+        workspaceId: UUID,
+        dto: FormDto,
+    ): FormDto {
         val form = Form(dto)
         form.workspaceId = workspaceId
         return repository.save(form).toDto()
     }
 
-    override fun update(id: UUID, dto: FormDto): FormDto {
-        val existing = repository.findByIdAndDeletedAtIsNull(id)
-            ?: throw NoSuchElementException("Form $id not found")
+    override fun update(
+        id: UUID,
+        dto: FormDto,
+    ): FormDto {
+        val existing =
+            repository.findByIdAndDeletedAtIsNull(id)
+                ?: throw NoSuchElementException("Form $id not found")
         existing.title = dto.title
         existing.description = dto.description
         existing.published = dto.published
@@ -37,8 +45,9 @@ class FormServiceImpl(private val repository: FormRepository) : FormService {
     }
 
     override fun delete(id: UUID) {
-        val existing = repository.findByIdAndDeletedAtIsNull(id)
-            ?: throw NoSuchElementException("Form $id not found")
+        val existing =
+            repository.findByIdAndDeletedAtIsNull(id)
+                ?: throw NoSuchElementException("Form $id not found")
         existing.deletedAt = Instant.now()
         existing.deletedBy = "system" // TODO: replace with authenticated principal
         repository.save(existing)

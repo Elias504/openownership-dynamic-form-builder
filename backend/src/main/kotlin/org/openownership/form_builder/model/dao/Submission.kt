@@ -13,12 +13,10 @@ import java.util.UUID
 class Submission(
     @Column(nullable = false)
     var formId: UUID = UUID.randomUUID(),
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     var data: Map<String, Any> = emptyMap(),
 ) : BaseEntity<SubmissionDto>() {
-
     constructor(dto: SubmissionDto) : this(formId = dto.formId, data = dto.data) {
         id = dto.id
         updatedBy = dto.updatedBy
@@ -26,15 +24,16 @@ class Submission(
         deletedBy = dto.deletedBy
     }
 
-    override fun toDto() = SubmissionDto().also {
-        it.id = id
-        it.formId = formId
-        it.data = data
-        it.createdAt = createdAt
-        it.createdBy = createdBy
-        it.updatedAt = updatedAt
-        it.updatedBy = updatedBy
-        it.deletedAt = deletedAt
-        it.deletedBy = deletedBy
-    }
+    override fun toDto() =
+        SubmissionDto().also {
+            it.id = id
+            it.formId = formId
+            it.data = data
+            it.createdAt = createdAt
+            it.createdBy = createdBy
+            it.updatedAt = updatedAt
+            it.updatedBy = updatedBy
+            it.deletedAt = deletedAt
+            it.deletedBy = deletedBy
+        }
 }

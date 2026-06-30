@@ -18,12 +18,14 @@ import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 class WorkspaceServiceImplTest {
-
     @Mock private lateinit var repository: WorkspaceRepository
+
     @InjectMocks private lateinit var service: WorkspaceServiceImpl
 
-    private fun workspace(name: String = "Test", slug: String = "test") =
-        Workspace(name = name, slug = slug)
+    private fun workspace(
+        name: String = "Test",
+        slug: String = "test",
+    ) = Workspace(name = name, slug = slug)
 
     @Test
     fun `findAll returns DTOs for all non-deleted workspaces`() {
@@ -59,7 +61,11 @@ class WorkspaceServiceImplTest {
 
     @Test
     fun `save persists workspace and returns DTO`() {
-        val dto = WorkspaceDto().apply { name = "New WS"; slug = "new-ws" }
+        val dto =
+            WorkspaceDto().apply {
+                name = "New WS"
+                slug = "new-ws"
+            }
         val saved = workspace("New WS", "new-ws")
         whenever(repository.save(any<Workspace>())).thenReturn(saved)
 
@@ -74,7 +80,11 @@ class WorkspaceServiceImplTest {
         val existing = workspace()
         whenever(repository.findByIdAndDeletedAtIsNull(existing.id)).thenReturn(existing)
         whenever(repository.save(any<Workspace>())).thenAnswer { it.arguments[0] as Workspace }
-        val dto = WorkspaceDto().apply { name = "Renamed"; slug = "renamed" }
+        val dto =
+            WorkspaceDto().apply {
+                name = "Renamed"
+                slug = "renamed"
+            }
 
         val result = service.update(existing.id, dto)
 

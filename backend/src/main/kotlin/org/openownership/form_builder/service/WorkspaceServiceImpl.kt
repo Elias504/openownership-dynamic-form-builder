@@ -10,31 +10,35 @@ import java.util.UUID
 
 @Service
 @Transactional
-class WorkspaceServiceImpl(private val repository: WorkspaceRepository) : WorkspaceService {
-
+class WorkspaceServiceImpl(
+    private val repository: WorkspaceRepository,
+) : WorkspaceService {
     @Transactional(readOnly = true)
-    override fun findAll(): List<WorkspaceDto> =
-        repository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().map { it.toDto() }
+    override fun findAll(): List<WorkspaceDto> = repository.findAllByDeletedAtIsNullOrderByCreatedAtDesc().map { it.toDto() }
 
     @Transactional(readOnly = true)
     override fun findById(id: UUID): WorkspaceDto =
         repository.findByIdAndDeletedAtIsNull(id)?.toDto()
             ?: throw NoSuchElementException("Workspace $id not found")
 
-    override fun save(dto: WorkspaceDto): WorkspaceDto =
-        repository.save(Workspace(dto)).toDto()
+    override fun save(dto: WorkspaceDto): WorkspaceDto = repository.save(Workspace(dto)).toDto()
 
-    override fun update(id: UUID, dto: WorkspaceDto): WorkspaceDto {
-        val existing = repository.findByIdAndDeletedAtIsNull(id)
-            ?: throw NoSuchElementException("Workspace $id not found")
+    override fun update(
+        id: UUID,
+        dto: WorkspaceDto,
+    ): WorkspaceDto {
+        val existing =
+            repository.findByIdAndDeletedAtIsNull(id)
+                ?: throw NoSuchElementException("Workspace $id not found")
         existing.name = dto.name
         existing.slug = dto.slug
         return repository.save(existing).toDto()
     }
 
     override fun delete(id: UUID) {
-        val existing = repository.findByIdAndDeletedAtIsNull(id)
-            ?: throw NoSuchElementException("Workspace $id not found")
+        val existing =
+            repository.findByIdAndDeletedAtIsNull(id)
+                ?: throw NoSuchElementException("Workspace $id not found")
         existing.deletedAt = Instant.now()
         existing.deletedBy = "system" // TODO: replace with authenticated principal
         repository.save(existing)

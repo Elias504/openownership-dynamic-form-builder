@@ -18,14 +18,16 @@ import java.util.UUID
 
 @ExtendWith(MockitoExtension::class)
 class FormServiceImplTest {
-
     @Mock private lateinit var repository: FormRepository
+
     @InjectMocks private lateinit var service: FormServiceImpl
 
     private val workspaceId: UUID = UUID.randomUUID()
 
-    private fun form(title: String = "Test Form", published: Boolean = false) =
-        Form(workspaceId = workspaceId, title = title, published = published)
+    private fun form(
+        title: String = "Test Form",
+        published: Boolean = false,
+    ) = Form(workspaceId = workspaceId, title = title, published = published)
 
     @Test
     fun `findByWorkspace returns DTOs filtered by workspaceId`() {
@@ -61,7 +63,11 @@ class FormServiceImplTest {
 
     @Test
     fun `save sets workspaceId from path parameter and persists`() {
-        val dto = FormDto().apply { title = "New Form"; description = "Desc" }
+        val dto =
+            FormDto().apply {
+                title = "New Form"
+                description = "Desc"
+            }
         val saved = form("New Form")
         whenever(repository.save(any<Form>())).thenReturn(saved)
 
@@ -78,7 +84,12 @@ class FormServiceImplTest {
         val existing = form()
         whenever(repository.findByIdAndDeletedAtIsNull(existing.id)).thenReturn(existing)
         whenever(repository.save(any<Form>())).thenAnswer { it.arguments[0] as Form }
-        val dto = FormDto().apply { title = "Updated"; description = "New desc"; published = true }
+        val dto =
+            FormDto().apply {
+                title = "Updated"
+                description = "New desc"
+                published = true
+            }
 
         val result = service.update(existing.id, dto)
 

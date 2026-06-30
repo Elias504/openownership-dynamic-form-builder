@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class FormBuilderApplication
 
 fun main(args: Array<String>) {
-	runApplication<FormBuilderApplication>(*args)
+    runApplication<FormBuilderApplication>(*args)
 }
