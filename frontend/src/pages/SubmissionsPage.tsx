@@ -19,10 +19,14 @@ function formatValue(value: unknown): string {
   return String(value)
 }
 
-function FieldInput({ field, register, setValue }: {
+function FieldInput({
+  field,
+  register,
+  onFileChange,
+}: {
   field: Field
   register: ReturnType<typeof useForm<Record<string, string>>>['register']
-  setValue: (name: string, value: string) => void
+  onFileChange: (fieldId: string, file: File | null) => void
 }) {
   const options = getOptions(field)
 
@@ -87,7 +91,7 @@ function FieldInput({ field, register, setValue }: {
         type="file"
         className="form-input"
         style={{ padding: '0.375rem 0.75rem' }}
-        onChange={(e) => setValue(field.id, e.target.files?.[0]?.name ?? '')}
+        onChange={(e) => onFileChange(field.id, e.target.files?.[0] ?? null)}
       />
     )
   }
@@ -106,8 +110,9 @@ export default function SubmissionsPage() {
   const navigate = useNavigate()
   const { fields, fetchFields } = useFormStore()
   const { submissions, loading, error, fetchByForm, submit } = useSubmissionStore()
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<Record<string, string>>()
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<Record<string, string>>()
   const [form, setForm] = useState<Form | null>(null)
+  const [fileSelections, setFileSelections] = useState<Record<string, File>>({})
 
   useEffect(() => {
     if (!formId) return
@@ -121,10 +126,31 @@ export default function SubmissionsPage() {
   const requiredFields = fields.filter((f) => f.required)
   const missingCount = requiredFields.filter((f) => errors[f.id]).length
 
+  const handleFileChange = (fieldId: string, file: File | null) => {
+    setFileSelections((prev) => {
+      if (file) return { ...prev, [fieldId]: file }
+      const next = { ...prev }
+      delete next[fieldId]
+      return next
+    })
+  }
+
   const onSubmit = async (values: Record<string, string>) => {
     if (!formId) return
-    await submit(formId, values as Record<string, unknown>)
+    const data: Record<string, unknown> = { ...values }
+
+    for (const field of fields) {
+      if (field.type === 'FILE') {
+        const file = fileSelections[field.id]
+        if (file) {
+          data[field.id] = await api.files.upload(file)
+        }
+      }
+    }
+
+    await submit(formId, data)
     reset()
+    setFileSelections({})
   }
 
   return (
@@ -164,7 +190,7 @@ export default function SubmissionsPage() {
                     {field.label}
                     {field.required && <span className="form-required"> *</span>}
                   </label>
-                  <FieldInput field={field} register={register} setValue={setValue} />
+                  <FieldInput field={field} register={register} onFileChange={handleFileChange} />
                 </div>
               ))}
             </div>
@@ -202,16 +228,35 @@ export default function SubmissionsPage() {
               <span className="submission-row__chevron">›</span>
             </summary>
             <div className="submission-data">
-              {Object.entries(sub.data).map(([key, value]) => (
-                <div key={key} className="submission-data__row">
-                  <span className="submission-data__label">
-                    {fieldMap[key]?.label ?? key}
-                  </span>
-                  <span className="submission-data__value">
-                    {formatValue(value)}
-                  </span>
-                </div>
-              ))}
+              {Object.entries(sub.data).map(([key, value]) => {
+                const field = fieldMap[key]
+                const isFileKey = field?.type === 'FILE' && typeof value === 'string' && value !== ''
+                return (
+                  <div key={key} className="submission-data__row">
+                    <span className="submission-data__label">
+                      {field?.label ?? key}
+                    </span>
+                    {isFileKey ? (
+                      <a
+                        href={api.files.downloadUrl(value as string)}
+                        className="btn-download-icon"
+                        title="Download file"
+                        download
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                          <polyline points="7 10 12 15 17 10"/>
+                          <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                      </a>
+                    ) : (
+                      <span className="submission-data__value">
+                        {formatValue(value)}
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </details>
         ))}

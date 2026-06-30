@@ -45,6 +45,18 @@ test.describe('Form Builder', () => {
     await expect(page.getByText('(3 options)')).toBeVisible()
   })
 
+  test('adds a file field', async ({ page }) => {
+    const id = uid()
+    await createFormAndOpenBuilder(page, id)
+    await page.getByRole('button', { name: '+ Add Field' }).click()
+    await page.getByPlaceholder('e.g. Full name').fill('Attachment')
+    await page.locator('select[name="type"]').selectOption('FILE')
+    await page.getByRole('button', { name: 'Add Field' }).click()
+
+    await expect(page.getByText('Attachment')).toBeVisible()
+    await expect(page.locator('.badge').filter({ hasText: 'File' })).toBeVisible()
+  })
+
   test('removes a field', async ({ page }) => {
     const id = uid()
     await createFormAndOpenBuilder(page, id)

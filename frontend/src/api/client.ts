@@ -46,4 +46,16 @@ export const api = {
     create: (formId: string, data: Record<string, unknown>) =>
       request<Submission>(`/api/forms/${formId}/submissions`, { method: 'POST', body: JSON.stringify({ data }) }),
   },
+
+  files: {
+    upload: async (file: File): Promise<string> => {
+      const form = new FormData()
+      form.append('file', file)
+      const res = await fetch('/api/files/upload', { method: 'POST', body: form })
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
+      const json = await res.json() as { key: string }
+      return json.key
+    },
+    downloadUrl: (key: string) => `/api/files/download?key=${encodeURIComponent(key)}`,
+  },
 }

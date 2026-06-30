@@ -456,6 +456,20 @@ body {
   color: var(--oo-text);
 }
 .submission-data__value { color: var(--oo-text-muted); }
+.btn-download-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--oo-primary);
+  border: 1px solid var(--oo-primary);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.btn-download-icon:hover { background: var(--oo-primary-light); text-decoration: none; }
 
 /* ===== Submission rows ===== */
 .submission-row {

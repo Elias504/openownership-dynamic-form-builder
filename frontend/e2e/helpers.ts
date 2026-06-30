@@ -40,3 +40,15 @@ export async function createFormAndOpenSubmissions(page: Page, id: string): Prom
   await page.getByRole('button', { name: '← back to Forms' }).click()
   await page.locator('.card').filter({ hasText: `Form ${id}` }).getByRole('button', { name: 'Submissions' }).click()
 }
+
+export async function createFormWithFileFieldAndOpenSubmissions(page: Page, id: string): Promise<void> {
+  await createFormAndOpenBuilder(page, id)
+
+  await page.getByRole('button', { name: '+ Add Field' }).click()
+  await page.getByPlaceholder('e.g. Full name').fill('Attachment')
+  await page.locator('select[name="type"]').selectOption('FILE')
+  await page.getByRole('button', { name: 'Add Field' }).click()
+
+  await page.getByRole('button', { name: '← back to Forms' }).click()
+  await page.locator('.card').filter({ hasText: `Form ${id}` }).getByRole('button', { name: 'Submissions' }).click()
+}

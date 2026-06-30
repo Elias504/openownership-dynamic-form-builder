@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { uid, createFormAndOpenSubmissions } from './helpers'
+import { uid, createFormAndOpenSubmissions, createFormWithFileFieldAndOpenSubmissions } from './helpers'
 
 test.describe('Submissions', () => {
   test('shows the submission form with all fields', async ({ page }) => {
@@ -56,5 +56,37 @@ test.describe('Submissions', () => {
 
     await expect(page).toHaveURL(/\/workspaces\//)
     await expect(page.getByRole('heading', { name: 'Forms' })).toBeVisible()
+  })
+
+  test('renders a file input for FILE fields', async ({ page }) => {
+    const id = uid()
+    await createFormWithFileFieldAndOpenSubmissions(page, id)
+
+    await expect(page.getByText('Attachment')).toBeVisible()
+    await expect(page.locator('input[type="file"]')).toBeVisible()
+  })
+
+  test('uploads a file and shows a Download button in the submission', async ({ page }) => {
+    const id = uid()
+    await createFormWithFileFieldAndOpenSubmissions(page, id)
+
+    await page.locator('input[type="file"]').setInputFiles({
+      name: 'test-upload.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('hello from playwright'),
+    })
+    await page.getByRole('button', { name: 'Submit response' }).click()
+
+    const row = page.locator('details.submission-row').first()
+    await expect(row).toBeVisible()
+    await row.click()
+
+    await expect(page.locator('.submission-data__label').filter({ hasText: 'Attachment' })).toBeVisible()
+    const downloadLink = page.locator('a.btn-download-icon[download]')
+    await expect(downloadLink).toBeVisible()
+    // href should point to the download endpoint with the file key
+    const href = await downloadLink.getAttribute('href')
+    expect(href).toContain('/api/files/download?key=')
+    expect(href).toContain('test-upload.txt')
   })
 })

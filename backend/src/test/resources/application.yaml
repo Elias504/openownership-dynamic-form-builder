@@ -13,3 +13,8 @@ spring:
         format_sql: false
         jdbc:
           time_zone: UTC
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: form-submissions
