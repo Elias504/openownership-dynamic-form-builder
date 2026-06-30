@@ -4,6 +4,8 @@ A configuration-driven engine for defining, rendering, validating, and storing d
 
 > **New to the app?** See the [User guide (HOWTO.md)](HOWTO.md) for a walkthrough of workspaces, forms, the builder, and submissions.
 
+> **Live demo:** The app is deployed and available at http://167.233.195.210
+
 ---
 
 ## Contents
