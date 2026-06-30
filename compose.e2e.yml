@@ -1,0 +1,22 @@
+---
+# Docker Compose override for Playwright E2E tests.
+#
+# Run with:
+#   docker compose --env-file .env.e2e -f compose.yaml -f compose.e2e.yml up -d --build
+#
+# Differences from the main stack:
+#   - Uses a separate postgres volume (postgres_e2e_data) so the app database is untouched
+#   - POSTGRES_DB=formbuilder_test (set via .env.e2e)
+#   - ddl-auto: create-drop gives a clean schema on every backend restart
+
+services:
+  db:
+    volumes:
+      - postgres_e2e_data:/var/lib/postgresql/data
+
+  backend:
+    environment:
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+
+volumes:
+  postgres_e2e_data:

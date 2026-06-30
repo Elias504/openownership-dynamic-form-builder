@@ -94,16 +94,8 @@ jobs:
         run: npx playwright install chromium --with-deps
         working-directory: frontend
 
-      - name: Create .env
-        run: |
-          cat > .env << 'EOF'
-          POSTGRES_DB=formbuilder
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=changeme
-          EOF
-
       - name: Start services
-        run: docker compose up -d --build
+        run: docker compose --env-file .env.e2e -f compose.yaml -f compose.e2e.yml up -d --build
 
       - name: Wait for frontend
         run: |
@@ -117,7 +109,7 @@ jobs:
             sleep 5
           done
           echo "Frontend did not become ready in time"
-          docker compose logs
+          docker compose --env-file .env.e2e -f compose.yaml -f compose.e2e.yml logs
           exit 1
 
       - name: Run Playwright tests
