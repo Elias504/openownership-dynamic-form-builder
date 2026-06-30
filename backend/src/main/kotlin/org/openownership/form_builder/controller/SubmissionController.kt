@@ -1,5 +1,7 @@
-package org.openownership.form_builder.submission
+package org.openownership.form_builder.controller
 
+import org.openownership.form_builder.model.dto.SubmissionDto
+import org.openownership.form_builder.service.SubmissionService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -13,15 +15,12 @@ import java.util.UUID
 class SubmissionController(private val service: SubmissionService) {
 
     @GetMapping("/api/forms/{formId}/submissions")
-    fun listByForm(@PathVariable formId: UUID) = service.findByForm(formId)
+    fun findByForm(@PathVariable formId: UUID) = service.findByForm(formId)
 
     @GetMapping("/api/submissions/{id}")
-    fun get(@PathVariable id: UUID) = service.findById(id)
+    fun findById(@PathVariable id: UUID) = service.findById(id)
 
     @PostMapping("/api/forms/{formId}/submissions")
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@PathVariable formId: UUID, @RequestBody body: SubmissionRequest) =
-        service.create(formId, body.data)
+    fun save(@PathVariable formId: UUID, @RequestBody dto: SubmissionDto) = service.save(formId, dto)
 }
-
-data class SubmissionRequest(val data: Map<String, Any>)

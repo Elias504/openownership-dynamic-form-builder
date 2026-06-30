@@ -1,23 +1,28 @@
-export interface Workspace {
+export interface BaseDto {
   id: string
-  name: string
-  slug: string
   createdAt: string
+  createdBy: string
+  updatedAt: string
+  updatedBy: string
+  deletedAt: string | null
+  deletedBy: string | null
 }
 
-export interface Form {
-  id: string
+export interface Workspace extends BaseDto {
+  name: string
+  slug: string
+}
+
+export interface Form extends BaseDto {
   workspaceId: string
   title: string
   description?: string
   published: boolean
-  createdAt: string
 }
 
 export type FieldType = 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'DATE' | 'SELECT' | 'CHECKBOX' | 'RADIO' | 'FILE'
 
-export interface Field {
-  id: string
+export interface Field extends BaseDto {
   formId: string
   label: string
   type: FieldType
@@ -26,9 +31,7 @@ export interface Field {
   config: Record<string, unknown>
 }
 
-export interface Submission {
-  id: string
+export interface Submission extends BaseDto {
   formId: string
   data: Record<string, unknown>
-  submittedAt: string
 }

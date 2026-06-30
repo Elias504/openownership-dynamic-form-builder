@@ -1,5 +1,7 @@
-package org.openownership.form_builder.form
+package org.openownership.form_builder.controller
 
+import org.openownership.form_builder.model.dto.FormDto
+import org.openownership.form_builder.service.FormService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,25 +17,19 @@ import java.util.UUID
 class FormController(private val service: FormService) {
 
     @GetMapping("/api/workspaces/{workspaceId}/forms")
-    fun listByWorkspace(@PathVariable workspaceId: UUID) =
-        service.findByWorkspace(workspaceId)
+    fun findByWorkspace(@PathVariable workspaceId: UUID) = service.findByWorkspace(workspaceId)
 
     @GetMapping("/api/forms/{id}")
-    fun get(@PathVariable id: UUID) = service.findById(id)
+    fun findById(@PathVariable id: UUID) = service.findById(id)
 
     @PostMapping("/api/workspaces/{workspaceId}/forms")
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@PathVariable workspaceId: UUID, @RequestBody body: FormRequest) =
-        service.create(workspaceId, body.title, body.description)
+    fun save(@PathVariable workspaceId: UUID, @RequestBody dto: FormDto) = service.save(workspaceId, dto)
 
     @PutMapping("/api/forms/{id}")
-    fun update(@PathVariable id: UUID, @RequestBody body: FormUpdateRequest) =
-        service.update(id, body.title, body.description, body.published)
+    fun update(@PathVariable id: UUID, @RequestBody dto: FormDto) = service.update(id, dto)
 
     @DeleteMapping("/api/forms/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: UUID) = service.delete(id)
 }
-
-data class FormRequest(val title: String, val description: String? = null)
-data class FormUpdateRequest(val title: String, val description: String? = null, val published: Boolean = false)

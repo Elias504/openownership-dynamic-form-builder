@@ -16,7 +16,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class SecurityConfig {
 
     // Ordered.HIGHEST_PRECEDENCE + 1 ensures this chain runs before the OAuth2
-    // Authorization Server's auto-configured chain (which sits at HIGHEST_PRECEDENCE
+    // Authorization Server's autoconfigured chain (which sits at HIGHEST_PRECEDENCE
     // and has CSRF enabled), so our permitAll / CSRF-disabled config wins for all requests.
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE + 1)

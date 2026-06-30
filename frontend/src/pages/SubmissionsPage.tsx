@@ -60,7 +60,7 @@ export default function SubmissionsPage() {
       {submissions.map((sub) => (
         <details key={sub.id} style={{ marginBottom: 8, padding: '0.75rem', border: '1px solid #eee', borderRadius: 4 }}>
           <summary style={{ cursor: 'pointer' }}>
-            {new Date(sub.submittedAt).toLocaleString()}
+            {new Date(sub.createdAt).toLocaleString()}
           </summary>
           <pre style={{ marginTop: '0.5rem', fontSize: 12, background: '#f5f5f5', padding: '0.5rem', borderRadius: 4 }}>
             {JSON.stringify(sub.data, null, 2)}

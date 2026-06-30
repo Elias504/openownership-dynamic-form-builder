@@ -1,5 +1,7 @@
-package org.openownership.form_builder.workspace
+package org.openownership.form_builder.controller
 
+import org.openownership.form_builder.model.dto.WorkspaceDto
+import org.openownership.form_builder.service.WorkspaceService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,23 +19,19 @@ import java.util.UUID
 class WorkspaceController(private val service: WorkspaceService) {
 
     @GetMapping
-    fun list() = service.findAll()
+    fun findAll() = service.findAll()
 
     @GetMapping("/{id}")
-    fun get(@PathVariable id: UUID) = service.findById(id)
+    fun findById(@PathVariable id: UUID) = service.findById(id)
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody body: WorkspaceRequest) =
-        service.create(body.name, body.slug)
+    fun save(@RequestBody dto: WorkspaceDto) = service.save(dto)
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: UUID, @RequestBody body: WorkspaceRequest) =
-        service.update(id, body.name, body.slug)
+    fun update(@PathVariable id: UUID, @RequestBody dto: WorkspaceDto) = service.update(id, dto)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(@PathVariable id: UUID) = service.delete(id)
 }
-
-data class WorkspaceRequest(val name: String, val slug: String)
