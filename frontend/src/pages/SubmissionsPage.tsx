@@ -134,6 +134,11 @@ export default function SubmissionsPage() {
         { label: 'Workspaces', to: '/' },
         { label: 'Forms', onClick: () => navigate(-1) },
       ]}
+      action={
+        <button className="btn btn-cancel btn-sm" onClick={() => navigate(-1)}>
+          ← back to Forms
+        </button>
+      }
     >
       {error && <div className="error-banner">{error}</div>}
 
