@@ -8,6 +8,10 @@ on:
     branches: [dev, main]
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # Stage 1: Code quality
+  # ---------------------------------------------------------------------------
+
   lint-yaml:
     name: Lint YAML
     runs-on: ubuntu-24.04
@@ -46,8 +50,13 @@ jobs:
         run: ./mvnw --no-transfer-progress spotless:check
         working-directory: backend
 
+  # ---------------------------------------------------------------------------
+  # Stage 2: Tests (run only when all linters pass)
+  # ---------------------------------------------------------------------------
+
   test-backend:
     name: Backend Tests
+    needs: [lint-yaml, lint-typescript, lint-kotlin]
     runs-on: ubuntu-24.04
     services:
       postgres:
@@ -76,6 +85,7 @@ jobs:
 
   test-e2e:
     name: E2E Tests (Playwright)
+    needs: [lint-yaml, lint-typescript, lint-kotlin]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
