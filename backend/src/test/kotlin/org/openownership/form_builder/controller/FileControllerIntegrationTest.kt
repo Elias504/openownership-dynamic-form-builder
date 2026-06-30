@@ -6,8 +6,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.openownership.form_builder.AbstractIntegrationTest
 import org.openownership.form_builder.service.FileService
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.mock.web.MockMultipartFile
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
