@@ -12,7 +12,7 @@ interface FormStore {
   createForm: (workspaceId: string, data: { title: string; description?: string }) => Promise<Form>
   updateForm: (id: string, data: { title: string; description?: string; published: boolean }) => Promise<Form>
   removeForm: (id: string) => Promise<void>
-  addField: (formId: string, data: { label: string; type: FieldType; required?: boolean; displayOrder?: number }) => Promise<Field>
+  addField: (formId: string, data: { label: string; type: FieldType; required?: boolean; displayOrder?: number; config?: Record<string, unknown> }) => Promise<Field>
   updateField: (id: string, data: { label: string; type: FieldType; required?: boolean; displayOrder?: number }) => Promise<Field>
   removeField: (id: string) => Promise<void>
 }

@@ -166,6 +166,15 @@ body {
 }
 .btn-ghost:hover { color: #c22; border-color: #c22; background: #fff5f5; }
 
+.builder-page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--oo-border);
+}
+
 /* ===== Cards ===== */
 .card {
   background: #fff;
@@ -259,12 +268,20 @@ body {
   font-size: 0.9375rem;
   color: var(--oo-text);
 }
-.form-checkbox-row input[type="checkbox"] {
+.form-checkbox-row input[type="checkbox"],
+.form-checkbox-row input[type="radio"] {
   width: 1rem;
   height: 1rem;
   accent-color: var(--oo-primary);
   cursor: pointer;
   flex-shrink: 0;
+}
+
+.form-options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.125rem;
 }
 
 /* ===== Inline form panel ===== */
@@ -398,6 +415,47 @@ body {
   gap: 0.5rem;
   flex-shrink: 0;
 }
+
+/* ===== Validation banner ===== */
+.validation-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  background: #fffbeb;
+  border: 1px solid #f59e0b;
+  border-left: 4px solid #f59e0b;
+  color: #92400e;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  margin-bottom: 1.25rem;
+}
+.validation-banner::before {
+  content: '⚠';
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ===== Submission data (key-value view) ===== */
+.submission-data {
+  padding: 0.5rem 1.25rem 0.75rem;
+  background: #fafafa;
+  border-top: 1px solid rgba(0,0,0,0.07);
+}
+.submission-data__row {
+  display: grid;
+  grid-template-columns: minmax(120px, 30%) 1fr;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 0.9375rem;
+  align-items: baseline;
+}
+.submission-data__row:last-child { border-bottom: none; }
+.submission-data__label {
+  font-weight: 600;
+  color: var(--oo-text);
+}
+.submission-data__value { color: var(--oo-text-muted); }
 
 /* ===== Submission rows ===== */
 .submission-row {
