@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useFormStore } from '../store/formStore'
+import Layout from '../components/Layout'
 
 interface FormValues {
   title: string
@@ -27,40 +28,90 @@ export default function FormsPage() {
   }
 
   return (
-    <div style={{ maxWidth: 720, margin: '2rem auto', fontFamily: 'sans-serif' }}>
-      <button onClick={() => navigate('/')}>← Workspaces</button>
-      <h1>Forms</h1>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <button onClick={() => setShowForm((v) => !v)}>
-        {showForm ? 'Cancel' : 'New Form'}
-      </button>
+    <Layout
+      title="Forms"
+      breadcrumbs={[{ label: 'Workspaces', to: '/' }]}
+      action={
+        <button
+          className={showForm ? 'btn btn-cancel' : 'btn'}
+          onClick={() => { setShowForm((v) => !v); reset() }}
+        >
+          {showForm ? 'Cancel' : '+ New Form'}
+        </button>
+      }
+    >
+      {error && <div className="error-banner">{error}</div>}
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} style={{ margin: '1rem 0', display: 'flex', flexDirection: 'column', gap: '0.5rem', maxWidth: 400 }}>
-          <input placeholder="Title" {...register('title', { required: true })} />
-          <input placeholder="Description (optional)" {...register('description')} />
-          <button type="submit">Create</button>
-        </form>
+        <div className="form-panel">
+          <p className="form-panel__title">New Form</p>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-panel__grid form-panel__grid-2">
+              <div className="form-group">
+                <label className="form-label">
+                  Title <span className="form-required">*</span>
+                </label>
+                <input
+                  className="form-input"
+                  placeholder="e.g. Beneficial Ownership Declaration"
+                  {...register('title', { required: true })}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <input
+                  className="form-input"
+                  placeholder="Optional description"
+                  {...register('description')}
+                />
+              </div>
+            </div>
+            <div className="form-panel__actions">
+              <button type="submit" className="btn">Create Form</button>
+            </div>
+          </form>
+        </div>
       )}
 
-      {loading && <p>Loading...</p>}
+      {loading && <p className="loading-text">Loading forms…</p>}
 
-      <ul style={{ listStyle: 'none', padding: 0, marginTop: '1.5rem' }}>
+      {!loading && forms.length === 0 && !showForm && (
+        <div className="empty-state">
+          <p className="empty-state__title">No forms in this workspace</p>
+          <p className="empty-state__text">Create a form to start collecting data.</p>
+        </div>
+      )}
+
+      <div className="card-grid">
         {forms.map((form) => (
-          <li key={form.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 0', borderBottom: '1px solid #eee' }}>
-            <span style={{ flex: 1 }}>
-              <strong>{form.title}</strong>
-              {form.description && <small style={{ marginLeft: '0.5rem', color: '#666' }}>{form.description}</small>}
-              {form.published && <span style={{ marginLeft: '0.5rem', color: 'green', fontSize: 12 }}>Published</span>}
-            </span>
-            <button onClick={() => navigate(`/forms/${form.id}/builder`)}>Builder</button>
-            <button onClick={() => navigate(`/forms/${form.id}/submissions`)}>Submissions</button>
-            <button onClick={() => removeForm(form.id)}>Delete</button>
-          </li>
+          <div key={form.id} className="card">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="card-title">{form.title}</p>
+                  {form.published && (
+                    <span className="badge badge-green">Published</span>
+                  )}
+                </div>
+                {form.description && (
+                  <p className="text-muted text-sm mt-2">{form.description}</p>
+                )}
+              </div>
+              <div className="flex gap-2 items-center" style={{ flexShrink: 0 }}>
+                <button className="btn btn-sm" onClick={() => navigate(`/forms/${form.id}/builder`)}>
+                  Builder
+                </button>
+                <button className="btn btn-sm btn-outline" onClick={() => navigate(`/forms/${form.id}/submissions`)}>
+                  Submissions
+                </button>
+                <button className="btn-ghost" onClick={() => removeForm(form.id)}>
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Layout>
   )
 }
