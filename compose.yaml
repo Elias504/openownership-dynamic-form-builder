@@ -37,7 +37,7 @@ services:
     ports:
       - "${BACKEND_PORT:-8081}:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}?sslmode=require
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}e
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
