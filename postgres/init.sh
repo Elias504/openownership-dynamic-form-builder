@@ -17,6 +17,10 @@ host    all             all             0.0.0.0/0               md5
 EOF
 
 # Ensure the postgres role is enabled with LOGIN and the configured password.
-psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" <<SQL
-ALTER ROLE "${POSTGRES_USER}" WITH LOGIN PASSWORD '${POSTGRES_PASSWORD}';
+# Pass credentials as psql variables and use psql's quoting syntax so that
+# special characters in the role name or password do not break SQL syntax.
+psql -v ON_ERROR_STOP=1 --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" \
+  -v role="${POSTGRES_USER}" \
+  -v pass="${POSTGRES_PASSWORD}" <<'SQL'
+ALTER ROLE :"role" WITH LOGIN PASSWORD :'pass';
 SQL
